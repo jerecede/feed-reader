@@ -1,0 +1,69 @@
+grafica per l'utente
+informazioni che si possono aggiugnere alla form
+
+conterrà:
+-indirizzi (più di uno)
+-numeri di telefono
+
+form --> formgroup - formcontrolname
+form, label, input
+
+serve fare questi import nel ts:
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+dentro la classe del component
+si inizializza FormGroup({}) che vuole al suo interno i parametri della form
+i parametri della form si inizializzano con FormControl
+
+id input e for label stesso nome del formcontrolname
+button ---> [disabled]="!bigForm.valid" per far funzionare i validators
+
+
+  addAddress() {
+    const addressesArray = this.bigForm.get('addresses')
+  }
+get()
+Retrieves a child control given the control's name or path.
+This signature for get supports strings and const arrays (.get(['foo', 'bar'] as const)).
+
+
+street: new FormControl('', [Validators.pattern()]), //pattern(regexxxxxxxx!!!!!!!!!!!!!!!! custom validator)
+
+per rendere la form dinamica 
+
+
+//////////////////////////////////////////////////////////////
+
+Reddit - Feedreader AIUTO MUOIO
+
+- il nostro utente può iscriversi a dei feed (salvare nome feed e l'url feed dentro localstorage)
+abbiamo un feed vuoto -> tastino aggiungi feed -> chiede nome e url feed -> oggetto feed in localStorage
+- torno alla homepage dell'app feed rss, chiama ognuno di quei feed, parsa le info, le mette in ordine di tempo e te le fa vedere una dopo l'altra
+- abbiamo anche un drawer laterale con la lista dei feed, ne seleziono uno e mi mostra i dettagli
+- feed rss e feed di reddit --- www.reddit.com/r/ProgrammerHumor.json
+- se mi iscrivo a feed rss avrò una dropdown con url e nome da aggiungere
+- se mi iscrivo a reddit gli devo passare solo il NOME del subreddit 
+
+DEVE ESSERE terribilmente complicato e doloroso così non vi riposate
+mobile first
+con angular material
+
+. avere toolbar con:
+    menu tre righette a sx,
+    nome app se sono in home + nome feed/giornale/reddit se ho aperto il feed singolo,
+    tasto + a dx
+
+. drawer laterale con:
+    lista feed a cui sono iscritto (filtra o apri nuova pagina)
+    cuore bottone che filtra tutti i preferiti e li mostra al centro
+
+. area centrale - le card di tutti i feed registrati in ordine cronologico con:
+    titolo sopra, immagine e testo
+       - favbutton (salva tutti i post salvati in un oggetto/array in localstorage)
+       - sharebutton
+       - openbutton articolo in una pagina nuova
+
+. pagina aggiungi nuovo feed con formgroup/controls etc...:
+    nome, tipo (reddit o rss), url (se rss) o name (se reddit)
+    sotto un tasto + che aggiunge nuovi formini
+    sotto il bigtastosalva

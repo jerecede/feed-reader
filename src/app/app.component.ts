@@ -1,21 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HomeComponent } from "./components/home/home.component";
-import { HeaderComponent } from "./components/header/header.component";
 import { DataService } from './services/data.service';
+import { HeaderComponent } from "./components/header/header.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HomeComponent, HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'feed-reader';
 
-  
+  dataServ = inject(DataService);
+
   constructor(){
-    const service = inject(DataService);
-    service.getData();
+    this.dataServ.addRss('IlSecolo','https://www.ilsecoloxix.it/genova/rss');
+    this.dataServ.addRss('anime');
   }
 }

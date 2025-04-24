@@ -5,13 +5,26 @@ import { Injectable } from '@angular/core';
 })
 export class DataService {
 
-  url = 'https://www.ilsecoloxix.it/genova/rss'
+  // proxy = 'https://cors-anywhere.herokuapp.com/';
+  //per attivarlo dal mio localhost devo usare questo link https://cors-anywhere.herokuapp.com/corsdemo
 
-  getData() {
-    fetch(this.url)
-      .then(res => res.text())
-      .then(str => new DOMParser().parseFromString(str, 'text/xml'))
-      .then(data => console.log(data.documentElement))
+  addRss(name: string, url: string = '') {
+    // fetch(this.proxy + url)
+    // fetch(url)
+    //   .then(res => res.text())
+    //   .then(str => new DOMParser().parseFromString(str, 'text/xml'))
+    //   .then(data => console.log(data.documentElement));
+
+    const feed = {
+      nameFeed: name,
+      urlFeed: url ? url : `https://www.reddit.com/r/${name}/.rss`
+    }
+
+    let feeds = JSON.parse(localStorage.getItem('feed') || '[]') ;
+    if(!(feeds.some((obj: any) => obj.urlFeed === feed.urlFeed))){ //aggiunge il feed solo se non esiste nella localstorage
+      feeds.push(feed)
+      localStorage.setItem('feed', JSON.stringify(feeds));
+    }
   }
 
 

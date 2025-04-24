@@ -1,3 +1,4 @@
-.maat{
-    color: azure;
+.container{
+    height: calc(100vh - 104px); //sottrarre altezza header e anche spessore di tutti i bordi (top e bottom)
+    border: solid black 1px;
 }

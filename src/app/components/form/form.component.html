@@ -1,0 +1,49 @@
+<form [formGroup]="myForm" (ngSubmit)="submitForm()">
+    <!-- label for='' e input id='' sono sempre associati -->
+    <label for="name">
+        nome:
+    </label>
+    <input type="text" formControlName="name" id="name">
+    <label for="surname">
+        cognome:
+    </label>
+    <input type="text" formControlName="surname" id="surname">
+    <label for="email">
+        e-mail:
+    </label>
+    <input type="text" formControlName="email" id="email">
+    <label for="birthdate">
+        data di nascita:
+    </label>
+    <input type="date" formControlName="birthdate" id="birthdate">
+    <label for="birthplace">
+        luogo di nascita:
+    </label>
+    <input type="text" formControlName="birthplace" id="birthplace">
+    <label for="taxCode">
+        codice fiscale:
+    </label>
+    <input type="text" formControlName="taxCode" id="taxCode">
+    <div class="add-address">
+        <span>indirizzi:</span>
+        <button type="button" (click)="addAddress()">aggiungi indirizzo</button>
+    </div>
+    <div formArrayName="addresses">
+        @for (address of addresses.controls; let i = $index; track $index) {
+            <div [formGroupName]="i">
+                <label for="city">citta:</label>
+                <input type="text" formControlName="city" id ='city'>
+                <label for="code">codice postale:</label>
+                <input type="text" formControlName="code" id ='code'>
+                <label for="street">via:</label>
+                <input type="text" formControlName="street" id ='street'>
+                <button type="button" (click)="removeAddress(i)">rimuovi</button>
+            </div>
+        }
+    </div>
+
+    <button type="submit">invia</button>
+    <!-- <button [disabled]='!myForm.valid' type="submit">invia</button> -->
+</form>
+
+<button [routerLink]="['']">turn back!</button>

@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { CardComponent } from "../card/card.component";
+import { Component, inject } from '@angular/core';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { MenuService } from '../../services/menu/menu.service';
 
 @Component({
   selector: 'app-main',
-  imports: [CardComponent],
+  imports: [MatSidenavModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
 export class MainComponent {
-
+  menuServ = inject(MenuService);
 }

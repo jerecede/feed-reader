@@ -1,0 +1,13 @@
+mat-drawer-container{
+    border: solid black 1px;
+    width: auto;
+    height: calc(100vh - 100px); //sottrarre altezza di header
+    background-color: white;
+}
+
+mat-drawer{
+    background-color: #424242;
+    color: black;
+    border-radius: 0;
+    width: 350px;
+}

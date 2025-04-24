@@ -1,32 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Feed } from '../../models/feed';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-
   // proxy = 'https://cors-anywhere.herokuapp.com/';
   //per attivarlo dal mio localhost devo usare questo link https://cors-anywhere.herokuapp.com/corsdemo
-
-  addRss(name: string, url: string = '') {
-    // fetch(this.proxy + url)
+  // fetch(this.proxy + url)
     // fetch(url)
     //   .then(res => res.text())
     //   .then(str => new DOMParser().parseFromString(str, 'text/xml'))
     //   .then(data => console.log(data.documentElement));
 
-    const feed = {
-      nameFeed: name,
-      urlFeed: url ? url : `https://www.reddit.com/r/${name}/.rss`
+  addRss(nameFeed: string, urlFeed?: string) {
+    const feed: Feed = {
+      name: nameFeed,
+      url: urlFeed ? urlFeed : `https://www.reddit.com/r/${nameFeed}/.rss`,
+      isSelected: false
     }
 
     let feeds = JSON.parse(localStorage.getItem('feed') || '[]') ;
-    if(!(feeds.some((obj: any) => obj.urlFeed === feed.urlFeed))){ //aggiunge il feed solo se non esiste nella localstorage
-      feeds.push(feed)
-      localStorage.setItem('feed', JSON.stringify(feeds));
+    if(!(feeds.some((obj: Feed) => obj.url === feed.url)) && !(feeds.some((obj: Feed) => obj.name === feed.name))){ //aggiunge il feed solo se è nuovo per la localstorage(nome e url diverso)
+        feeds.push(feed);
+        localStorage.setItem('feed', JSON.stringify(feeds));
     }
+    //bisogna aggiungere controllo se l'url serve veramente per ottenere rss, magari se ne occupa il form direttamente
   }
-
 
   // /**
   //  * 

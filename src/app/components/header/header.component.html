@@ -1,1 +1,10 @@
-<div class="container"></div>
+<mat-toolbar class="container">
+    <button mat-icon-button (click)="menuClicked()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Feed Reader</span>
+    <span class="spacer"></span>
+    <button mat-icon-button [routerLink]="['add-feed']">
+        <mat-icon>add</mat-icon>
+    </button>
+</mat-toolbar>

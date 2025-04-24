@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { HomeDetailComponent } from './components/home-detail/home-detail.component';
 import { HomeComponent } from './components/home/home.component';
+import { FormComponent } from './components/form/form.component';
 
 export const routes: Routes = [
     { 
@@ -9,8 +9,8 @@ export const routes: Routes = [
         title: 'Home page'
     },
     {
-        path: 'details/:id',
-        component: HomeDetailComponent,
-        title: 'Home details'
+        path: 'add-feed',
+        component: FormComponent,
+        title: 'Add Feed'
     }
 ];

@@ -1,4 +1,4 @@
-<div class="container">
-    <app-card></app-card>
-    <app-card></app-card>    
-</div>
+<mat-drawer-container hasBackdrop="false">
+    <mat-drawer mode="over" [opened]="menuServ.isOpen()">Drawer content</mat-drawer>
+    <mat-drawer-content>Main content</mat-drawer-content>
+</mat-drawer-container>

@@ -1,49 +1,48 @@
-<form [formGroup]="myForm" (ngSubmit)="submitForm()">
-    <!-- label for='' e input id='' sono sempre associati -->
-    <label for="name">
-        nome:
-    </label>
-    <input type="text" formControlName="name" id="name">
-    <label for="surname">
-        cognome:
-    </label>
-    <input type="text" formControlName="surname" id="surname">
-    <label for="email">
-        e-mail:
-    </label>
-    <input type="text" formControlName="email" id="email">
-    <label for="birthdate">
-        data di nascita:
-    </label>
-    <input type="date" formControlName="birthdate" id="birthdate">
-    <label for="birthplace">
-        luogo di nascita:
-    </label>
-    <input type="text" formControlName="birthplace" id="birthplace">
-    <label for="taxCode">
-        codice fiscale:
-    </label>
-    <input type="text" formControlName="taxCode" id="taxCode">
-    <div class="add-address">
-        <span>indirizzi:</span>
-        <button type="button" (click)="addAddress()">aggiungi indirizzo</button>
-    </div>
-    <div formArrayName="addresses">
-        @for (address of addresses.controls; let i = $index; track $index) {
-            <div [formGroupName]="i">
-                <label for="city">citta:</label>
-                <input type="text" formControlName="city" id ='city'>
-                <label for="code">codice postale:</label>
-                <input type="text" formControlName="code" id ='code'>
-                <label for="street">via:</label>
-                <input type="text" formControlName="street" id ='street'>
-                <button type="button" (click)="removeAddress(i)">rimuovi</button>
-            </div>
-        }
-    </div>
+<form [formGroup]="feedForm" (ngSubmit)="submitForm()">
+  <div formArrayName="feeds">
+    @for (feed of feeds.controls; let i = $index; track $index) {
+      <mat-card class="feed-card">
+        <mat-card-content>
+          <div class="feed-header">
+            <h3>Feed {{i + 1}}</h3>
+            <button mat-icon-button color="warn" type="button" (click)="removeFeed(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
 
-    <button type="submit">invia</button>
-    <!-- <button [disabled]='!myForm.valid' type="submit">invia</button> -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Feed Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter feed name">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Feed Type</mat-label>
+            <input matInput formControlName="type" placeholder="Enter feed type (e.g., news, weather, humor)">
+            <mat-hint>What kind of content does this feed provide?</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL</mat-label>
+            <input matInput formControlName="url" placeholder="Enter feed URL">
+            <mat-hint>For Reddit feeds, enter the subreddit name (e.g., 'programming')</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <div class="add-feed-container">
+    <button mat-raised-button color="primary" type="button" (click)="addFeed()">
+      <mat-icon>add</mat-icon>
+      Add Feed
+    </button>
+  </div>
+
+  <div class="submit-container">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!feedForm.valid">
+      Save Feeds
+    </button>
+  </div>
 </form>
 
-<button [routerLink]="['']">turn back!</button>
+<button mat-button [routerLink]="['']">Back to Home</button>

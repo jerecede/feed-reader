@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { MenuService } from '../../services/menu/menu.service';
 import { DataService } from '../../services/data/data.service';

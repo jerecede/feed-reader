@@ -18,5 +18,5 @@ export class AppComponent {
     // this.dataServ.addRss('IlSecolo2','https://www.ilsecoloxix.it/levante/rss');
   }
 
-  //quando la component si rompe fare tutto false nelle isSelected
+  //quando la component si rompe e anche quando si crea fare tutto false nelle isSelected
 }

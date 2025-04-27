@@ -1,25 +1,27 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Feed } from '../../models/feed';
+import { Item } from '../../models/item';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
 
   currentFeeds = signal<Feed[]>([]);
+  currentItems = signal<Item[]>([]);
+  imgNotFound = 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
 
   constructor() {
     this.currentFeeds.set(this.getFeeds())
-    console.log(this.currentFeeds());
-  }
+    this.currentItems.set(this.getItems());
+    console.log(this.currentItems());
 
-  // proxy = 'https://cors-anywhere.herokuapp.com/';
-  //per attivarlo dal mio localhost devo usare questo link https://cors-anywhere.herokuapp.com/corsdemo
-  // fetch(this.proxy + url)
-  // fetch(url)
-  //   .then(res => res.text())
-  //   .then(str => new DOMParser().parseFromString(str, 'text/xml'))
-  //   .then(data => console.log(data.documentElement));
+    fetch('https://www.ilsecoloxix.it/genova/rss')
+    .then(res => res.text())
+    .then(str => new DOMParser().parseFromString(str, 'text/xml'))
+    .then(data => console.log(data.documentElement));
+  }
 
   addRss(nameFeed: string, urlFeed?: string) {
     const feed: Feed = {
@@ -52,8 +54,6 @@ export class DataService {
     if(feedSelected){
       feedSelected.isSelected = !feedSelected.isSelected;
     }
-    
-    console.log(this.currentFeeds());
 
     let feeds = JSON.parse(localStorage.getItem('feed') || '[]');
     const feedSelectedStorage = feeds.find((feed: Feed) => feed.name === name);
@@ -61,6 +61,63 @@ export class DataService {
       feedSelectedStorage.isSelected = !feedSelectedStorage.isSelected;
     }
     localStorage.setItem('feed', JSON.stringify(feeds));
+
+    this.currentItems.set(this.getItems());
+  }
+
+  getItemFromUrl(url: string) {
+    // proxy = 'https://cors-anywhere.herokuapp.com/';
+    //per attivarlo dal mio localhost devo usare questo link https://cors-anywhere.herokuapp.com/corsdemo
+    // fetch(this.proxy + url)
+
+    return fetch(url)
+      .then(res => res.text())
+      .then(str => new DOMParser().parseFromString(str, 'text/xml'))
+      .then(data => {
+        const itemsArray = data.querySelectorAll('item');
+        let items: Item[] = []
+        itemsArray.forEach(itemObj => {
+          const itemTitle = itemObj.querySelector('title')!.textContent;
+          const itemLink = itemObj.querySelector('link')!.textContent;
+
+          const itemDate = itemObj.querySelector('pubDate')!.textContent || '';
+          const itemDateClean = itemDate.replace(/^[A-Za-z]+, /, '');
+
+          const newItemDate = new Date(itemDateClean);
+          const itemTimestamp = newItemDate.getTime();
+
+          const itemImgDesc = itemObj.querySelector('description')!.textContent || '';
+
+          let matchImg = itemImgDesc.match(/<img src="([^"]+)"/);
+          const itemImg = matchImg ? matchImg[1] : this.imgNotFound;
+
+          let itemDesc = itemImgDesc.replace(/<\/?[^>]+(>|$)/g, "").trim();
+
+          const item: Item = {
+            title: itemTitle || '',
+            desc: itemDesc,
+            img: itemImg,
+            link: itemLink || '',
+            timestamp: itemTimestamp
+          }
+          items.push(item);
+        })
+        return Promise.all(items);
+      });
+  }
+
+  getItems() {
+    const items: Item[] = []
+    for (const feed of this.currentFeeds()) {
+      if (feed.isSelected || this.currentFeeds().every((feed: Feed) => feed.isSelected === false)) {
+        const url = feed.url
+        this.getItemFromUrl(url).then(arrayItems => {
+          items.push(...arrayItems);
+        })
+      }
+    }
+    items.sort((a, b) => a.timestamp - b.timestamp)
+    return items;
   }
 
   // esisteNome(nome){

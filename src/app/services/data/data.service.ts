@@ -28,6 +28,10 @@ export class DataService {
     //bisogna aggiungere controllo se l'url serve veramente per ottenere rss, magari se ne occupa il form direttamente
   }
 
+  // esisteNome(nome){
+
+  // }
+
   // /**
   //  * 
   //  * @param {HTMLElement} data 

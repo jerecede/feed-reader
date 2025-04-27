@@ -2,7 +2,7 @@
   <div formArrayName="feeds">
     @for (feed of feeds.controls; let i = $index; track $index) {
       <mat-card class="feed-card">
-        <mat-card-content>
+        <mat-card-content [formGroupName]="i">
           <div class="feed-header">
             <h3>Feed {{i + 1}}</h3>
             <button mat-icon-button color="warn" type="button" (click)="removeFeed(i)">
@@ -10,20 +10,20 @@
             </button>
           </div>
 
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field class="full-width">
             <mat-label>Feed Name</mat-label>
-            <input matInput formControlName="name" placeholder="Enter feed name">
+            <input matInput formControlName="name" placeholder="Enter feed name" (input)="canSave()">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field class="full-width">
             <mat-label>Feed Type</mat-label>
-            <input matInput formControlName="type" placeholder="Enter feed type (e.g., news, weather, humor)">
+            <input matInput formControlName="type" placeholder="Enter feed type" (input)="canSave()">
             <mat-hint>What kind of content does this feed provide?</mat-hint>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field class="full-width">
             <mat-label>URL</mat-label>
-            <input matInput formControlName="url" placeholder="Enter feed URL">
+            <input matInput formControlName="url" placeholder="Enter feed URL" (input)="canSave()">
             <mat-hint>For Reddit feeds, enter the subreddit name (e.g., 'programming')</mat-hint>
           </mat-form-field>
         </mat-card-content>
@@ -32,14 +32,14 @@
   </div>
 
   <div class="add-feed-container">
-    <button mat-raised-button color="primary" type="button" (click)="addFeed()">
+    <button mat-button type="button" (click)="addFeed()">
       <mat-icon>add</mat-icon>
       Add Feed
     </button>
   </div>
 
   <div class="submit-container">
-    <button mat-raised-button color="primary" type="submit" [disabled]="!feedForm.valid">
+    <button mat-button type="submit" [disabled]="!canSave()">
       Save Feeds
     </button>
   </div>

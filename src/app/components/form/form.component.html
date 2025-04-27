@@ -13,18 +13,32 @@
           <mat-form-field class="full-width">
             <mat-label>Feed Name</mat-label>
             <input matInput formControlName="name" placeholder="Enter feed name" (input)="canSave()">
+            <mat-error *ngIf="isDuplicateName(feed.get('name')?.value, i)">
+              This feed name is already used
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field class="full-width">
             <mat-label>Feed Type</mat-label>
-            <input matInput formControlName="type" placeholder="Enter feed type" (input)="canSave()">
-            <mat-hint>What kind of content does this feed provide?</mat-hint>
+            <mat-select formControlName="type">
+              <mat-option value="normal">Normal RSS</mat-option>
+              <mat-option value="reddit">Reddit</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field class="full-width">
             <mat-label>URL</mat-label>
-            <input matInput formControlName="url" placeholder="Enter feed URL" (input)="canSave()">
-            <mat-hint>For Reddit feeds, enter the subreddit name (e.g., 'programming')</mat-hint>
+            <input matInput formControlName="url" 
+                   [placeholder]="feed.get('type')?.value === 'reddit' ? 'Enter subreddit name' : 'Enter feed URL'">
+            <mat-hint *ngIf="feed.get('type')?.value === 'reddit'">
+              Enter only the subreddit name (e.g., 'programming' for r/programming)
+            </mat-hint>
+            <mat-hint *ngIf="feed.get('type')?.value === 'normal'">
+              Enter the full RSS feed URL
+            </mat-hint>
+            <mat-error *ngIf="isDuplicateUrl(feed.get('url')?.value, i)">
+              This URL is already used
+            </mat-error>
           </mat-form-field>
         </mat-card-content>
       </mat-card>

@@ -40,7 +40,7 @@ export class FormComponent {
   addFeed() {
     const feedGroup = new FormGroup({
       name: new FormControl(''),
-      type: new FormControl(''),
+      type: new FormControl('normal'),
       url: new FormControl('')
     });
 
@@ -59,20 +59,46 @@ export class FormComponent {
     this.feeds.removeAt(index);
   }
 
+  isDuplicateName(name: string, currentIndex: number): boolean {
+    return this.feeds.controls.some((feedGroup, index) => {
+      if (index === currentIndex) return false;
+      const group = feedGroup as FormGroup;
+      return group.get('name')?.value.toLowerCase() === name.toLowerCase();
+    });
+  }
+
+  isDuplicateUrl(url: string, currentIndex: number): boolean {
+    return this.feeds.controls.some((feedGroup, index) => {
+      if (index === currentIndex) return false;
+      const group = feedGroup as FormGroup;
+      return group.get('url')?.value.toLowerCase() === url.toLowerCase();
+    });
+  }
+
   canSave(): boolean {
     if (this.feeds.length === 0) {
       return false;
     }
     
-    return this.feeds.controls.every(feedGroup => {
+    return this.feeds.controls.every((feedGroup, index) => {
       const group = feedGroup as FormGroup;
       const name = group.get('name')?.value;
       const type = group.get('type')?.value;
       const url = group.get('url')?.value;
       
-      return name && name.trim() !== '' && 
-             type && type.trim() !== '' && 
-             url && url.trim() !== '';
+      // Check for empty fields
+      if (!name || !type || !url || 
+          name.trim() === '' || 
+          url.trim() === '') {
+        return false;
+      }
+
+      // Check for duplicates 
+      if (this.isDuplicateName(name, index) || this.isDuplicateUrl(url, index)) {
+        return false;
+      }
+
+      return true;
     });
   }
 
@@ -80,7 +106,12 @@ export class FormComponent {
     if (this.canSave()) {
       const feeds = this.feeds.value;
       feeds.forEach((feed: any) => {
-        this.dataService.addRss(feed.name, feed.url);
+        const feedName = feed.name.toLowerCase();
+        if (feed.type === 'reddit') {
+          this.dataService.addRss(feedName, `https://www.reddit.com/r/${feed.url}/.rss`);
+        } else {
+          this.dataService.addRss(feedName, feed.url);
+        }
       });
       this.feedForm.reset();
       this.feeds.clear();

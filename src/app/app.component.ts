@@ -15,6 +15,8 @@ export class AppComponent {
 
   constructor(){
     // this.dataServ.addRss('IlSecolo','https://www.ilsecoloxix.it/genova/rss');
-    // this.dataServ.addRss('anime');
+    // this.dataServ.addRss('IlSecolo2','https://www.ilsecoloxix.it/levante/rss');
   }
+
+  //quando la component si rompe fare tutto false nelle isSelected
 }

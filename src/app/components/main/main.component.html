@@ -1,4 +1,20 @@
 <mat-drawer-container hasBackdrop="false">
-    <mat-drawer mode="over" [opened]="menuServ.isOpen()">Drawer content</mat-drawer>
+    <mat-drawer mode="over" [opened]="menuServ.isOpen()">
+        @if(dataServ.currentFeeds().length === 0){
+            <div>you have to add a Feed</div>
+        } @else {
+            <div *ngFor="let element of dataServ.currentFeeds()">
+                {{ element.name }}
+                @if(element.isSelected){
+                    <input type="checkbox" checked (click)="dataServ.nameSelected(element.name)">
+                    <button (click)="dataServ.removeRss(element.name)">remove</button>
+                } @else {
+                    <input type="checkbox" (click)="dataServ.nameSelected(element.name)">
+                    <button (click)="dataServ.removeRss(element.name)">remove</button>
+                }
+            </div>
+        } 
+    </mat-drawer>
+
     <mat-drawer-content>Main content</mat-drawer-content>
 </mat-drawer-container>

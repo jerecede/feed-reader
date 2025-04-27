@@ -1,59 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { allUpperValidator, startsByA } from '../../validators/alluppervalidators';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { DataService } from '../../services/data/data.service';
 
 @Component({
   selector: 'app-form',
-  imports: [RouterModule, ReactiveFormsModule],
+  imports: [
+    RouterModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatSelectModule
+  ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
 export class FormComponent {
-  //myForm è un formGroup, corrisponde al form
-  myForm = new FormGroup({
-    //ognuno è un formNameControl, corrisponde all'input
-    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    surname: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    birthdate: new FormControl(''),
-    birthplace: new FormControl(''),
-    taxCode: new FormControl('', [Validators.required, allUpperValidator(), startsByA]),
-    addresses: new FormArray([]),
+  private dataService = inject(DataService);
+  
+  feedForm = new FormGroup({
+    feeds: new FormArray([])
   });
 
-  submitForm() {
-    if (this.myForm.valid) {
-      console.log(this.myForm);
-    } else {
-      for (const key in this.myForm.controls) {
-        if (Object.prototype.hasOwnProperty.call(this.myForm.controls, key)) {
-          const element = this.myForm.get(key);
-          console.log(key, element?.errors)
-        }
-      }
-    }
+  get feeds() {
+    return this.feedForm.get('feeds') as FormArray;
   }
 
-  get addresses() {
-    return this.myForm.get('addresses') as FormArray; // sempre fare cast
-  }
-
-  addAddress() {
-    // const addressesArray = this.myForm.get('addresses') as FormArray;
-
-    const addressGroup = new FormGroup({
-      street: new FormControl(''),//[Validators.pattern()]
-      city: new FormControl(''),
-      code: new FormControl(''),
+  addFeed() {
+    const feedGroup = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      type: new FormControl('', [Validators.required]),
+      url: new FormControl('', [Validators.required])
     });
 
-    // addressesArray.controls.push(addressGroup);
-    this.addresses.controls.push(addressGroup);
+    this.feeds.push(feedGroup);
+    // Focus the first input of the new feed group
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('input');
+      if (inputs.length > 0) {
+        inputs[inputs.length - 3].focus();
+      }
+    });
   }
 
-  removeAddress(index: number) {
-    // const addressesArray = this.myForm.get('addresses') as FormArray;
-    this.addresses.removeAt(index);
+  removeFeed(index: number) {
+    this.feeds.removeAt(index);
+  }
+
+  submitForm() {
+    if (this.feedForm.valid) {
+      const feeds = this.feeds.value;
+      feeds.forEach((feed: any) => {
+        this.dataService.addRss(feed.name, feed.url);
+      });
+      this.feedForm.reset();
+      this.feeds.clear();
+    }
   }
 }

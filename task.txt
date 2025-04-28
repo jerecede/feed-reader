@@ -67,3 +67,10 @@ con angular material
     nome, tipo (reddit o rss), url (se rss) o name (se reddit)
     sotto un tasto + che aggiunge nuovi formini
     sotto il bigtastosalva
+
+-IL FORM è DA AGGIUSTARE
+-NON LEGGE TUTTI I GIORNALI, SOPRATTUTTO REDDIT
+-GESTIRE MEGLIO LA LOGICA DEI FAVORITE
+-CONTROLLARE SE EFFETTIVAMENTE ORDINA CRONOLOGICAMENTE GLI ITEMS
+-MIGLIORARE CSS
+-RENDERLO MOBILE

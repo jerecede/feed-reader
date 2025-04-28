@@ -4,4 +4,5 @@ export interface Item {
     img: string,
     link: string,
     timestamp: number
+    isFavorite: boolean
 }

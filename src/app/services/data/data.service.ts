@@ -10,17 +10,10 @@ export class DataService {
 
   currentFeeds = signal<Feed[]>([]);
   currentItems = signal<Item[]>([]);
+  currentFavoriteItems = signal<Item[]>([]);
   imgNotFound = 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
 
   constructor() {
-    this.currentFeeds.set(this.getFeeds())
-    this.currentItems.set(this.getItems());
-    console.log(this.currentItems());
-
-    fetch('https://www.ilsecoloxix.it/genova/rss')
-    .then(res => res.text())
-    .then(str => new DOMParser().parseFromString(str, 'text/xml'))
-    .then(data => console.log(data.documentElement));
   }
 
   addRss(nameFeed: string, urlFeed?: string) {
@@ -34,14 +27,15 @@ export class DataService {
     feeds.push(feed);
     localStorage.setItem('feed', JSON.stringify(feeds));
 
-    this.currentFeeds.set(this.getFeeds())
+    this.updateEverything();
   }
 
   removeRss(name: string){
     let feeds = JSON.parse(localStorage.getItem('feed') || '[]');
     const newFeeds = feeds.filter((feed: Feed) => feed.name !== name);
     localStorage.setItem('feed', JSON.stringify(newFeeds));
-    this.currentFeeds.set(this.getFeeds());
+
+    this.updateEverything();
   }
 
   getFeeds(): Feed[]{
@@ -62,7 +56,20 @@ export class DataService {
     }
     localStorage.setItem('feed', JSON.stringify(feeds));
 
-    this.currentItems.set(this.getItems());
+    this.updateEverything();
+  }
+
+  toggleFavoriteItem(itemSelected: Item){
+    let favoriteItems: Item[] = JSON.parse(localStorage.getItem('favorite') || '[]');
+    if(favoriteItems.some((item: Item)=> item.title === itemSelected.title && item.timestamp === itemSelected.timestamp)){
+      favoriteItems = favoriteItems.filter((item: Item)=> item.title !== itemSelected.title && item.timestamp !== itemSelected.timestamp)
+    } else {
+      favoriteItems.push(itemSelected);
+    }
+    localStorage.setItem('favorite', JSON.stringify(favoriteItems));
+    this.updateFavorite();
+    console.log(this.currentItems())
+    console.log(this.currentFavoriteItems())
   }
 
   getItemFromUrl(url: string) {
@@ -98,7 +105,8 @@ export class DataService {
             desc: itemDesc,
             img: itemImg,
             link: itemLink || '',
-            timestamp: itemTimestamp
+            timestamp: itemTimestamp,
+            isFavorite: false
           }
           items.push(item);
         })
@@ -120,53 +128,29 @@ export class DataService {
     return items;
   }
 
-  // esisteNome(nome){
-  // if (!(feeds.some((obj: Feed) => obj.url === feed.url)) && !(feeds.some((obj: Feed) => obj.name === feed.name))) { //aggiunge il feed solo se è nuovo per la localstorage(nome e url diverso)
-  //bisogna aggiungere controllo se l'url serve veramente per ottenere rss, magari se ne occupa il form direttamente
-  // }
+  getFavoriteItems(): Item[]{
+    let favoriteItems = JSON.parse(localStorage.getItem('favorite') || '[]');
+    return favoriteItems;
+  }
 
-  // /**
-  //  * 
-  //  * @param {HTMLElement} data 
-  //  */
-  // function renderData(data) {
-  //   const itemsArray = data.querySelectorAll('item')
-  //   const ul = document.createElement('ul')
-  //   itemsArray.forEach( post => {
-  //     ul.appendChild(generateNews(post))
-  //   })
-  //   document.getElementById('root').appendChild(ul)
-  // }
+  updateEverything(){
+    this.currentFeeds.set(this.getFeeds());
+    this.currentItems.set(this.getItems());
+  }
 
-  // /**
-  //  * 
-  //  * @param {HTMLElement} item 
-  //  */
-  // function generateNews(item) {
-  //   const li = document.createElement('li')
-  //   const divDescription = document.createElement('div')
-  //   const newsTitle = item.querySelector('title').textContent
-  //   const desc = item.querySelector('description').textContent
-  //   divDescription.innerHTML = desc
-  //   const imgSrc = divDescription.querySelector('img')
-  //   console.log(imgSrc)
-  //   let src
-  //   try {
-  //     src = imgSrc.src
-  //   } catch (error) {
-  //     src = ''
-  //   }
+  updateFavorite(){
+    this.currentFavoriteItems.set(this.getFavoriteItems());
+  }
 
-  //   li.innerHTML = `
-  //   <h3 class="news-title">
-  //     <a href="">${newsTitle}</a>
-  //     <div class="img-container">
-  //       <img src="${src}" alt="">
-  //     </div>
-  //   </h3>
-  //   `
+  setup(){
+    let feeds = JSON.parse(localStorage.getItem('feed') || '[]');
+    const setupFeeds = feeds.map((feed: Feed) => ({
+      ...feed,
+      isSelected: false
+    }));
+    localStorage.setItem('feed', JSON.stringify(setupFeeds));
 
-  //   // li.appendChild(divDescription)
-  //   return li
-  // }
+    this.updateEverything();
+    this.updateFavorite();
+  }
 }

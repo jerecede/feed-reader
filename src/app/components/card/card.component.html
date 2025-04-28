@@ -1,3 +1,22 @@
 <div class="container">
-    <p>card works!</p>
+    <span class="title-container" (click)="itemCard.link">{{itemCard.title}}</span>
+    <div class="subcontainer">
+        <div class="img-container">
+            <img [src]="itemCard.img">
+        </div>
+        <div class="subcontainer-2">
+            <span class="desc-container">{{itemCard.desc}}</span>
+            <div class="icons-container">
+                <button mat-icon-button (click)="openLink()">
+                    <mat-icon>link</mat-icon>
+                </button>
+                <button mat-icon-button (click)="shareLink()">
+                    <mat-icon>share</mat-icon>
+                </button>
+                <button mat-icon-button (click)="toggleFavorite()">
+                    <mat-icon [ngStyle]="currentStyles">favorite</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

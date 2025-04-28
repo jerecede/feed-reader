@@ -3,18 +3,22 @@
         @if(dataServ.currentFeeds().length === 0){
             <div>you have to add a Feed</div>
         } @else {
-            <div *ngFor="let element of dataServ.currentFeeds()">
-                {{ element.name }}
-                @if(element.isSelected){
-                    <input type="checkbox" checked (click)="dataServ.nameSelected(element.name)">
-                    <button (click)="dataServ.removeRss(element.name)">remove</button>
+            <div *ngFor="let feed of dataServ.currentFeeds()">
+                {{ feed.name }}
+                @if(feed.isSelected){
+                    <input type="checkbox" checked (click)="dataServ.nameSelected(feed.name)">
+                    <button (click)="dataServ.removeRss(feed.name)">remove</button>
                 } @else {
-                    <input type="checkbox" (click)="dataServ.nameSelected(element.name)">
-                    <button (click)="dataServ.removeRss(element.name)">remove</button>
+                    <input type="checkbox" (click)="dataServ.nameSelected(feed.name)">
+                    <button (click)="dataServ.removeRss(feed.name)">remove</button>
                 }
             </div>
-        } 
+        }
+        <button [routerLink]="['favorite']">see favorites</button>
     </mat-drawer>
 
-    <mat-drawer-content>Main content</mat-drawer-content>
+    <mat-drawer-content>
+        <app-card *ngFor="let item of dataServ.currentItems()" [itemCard]="item">
+        </app-card>
+    </mat-drawer-content>
 </mat-drawer-container>

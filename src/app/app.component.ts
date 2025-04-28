@@ -11,12 +11,15 @@ import { DataService } from './services/data/data.service';
 export class AppComponent {
   title = 'feed-reader';
 
-  // dataServ = inject(DataService);
+  dataServ = inject(DataService);
 
   constructor(){
     // this.dataServ.addRss('IlSecolo','https://www.ilsecoloxix.it/genova/rss');
     // this.dataServ.addRss('IlSecolo2','https://www.ilsecoloxix.it/levante/rss');
   }
 
-  //quando la component si rompe e anche quando si crea fare tutto false nelle isSelected
+  ngOnInit(){
+    this.dataServ.setup();
+    console.log("nasco");
+  }
 }

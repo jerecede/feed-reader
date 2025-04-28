@@ -6,8 +6,14 @@ mat-drawer-container{
 }
 
 mat-drawer{
-    background-color: #424242;
+    background-color: #bdb7b7;
     color: black;
     border-radius: 0;
+    border-right: solid black 2px;
     width: 350px;
+}
+mat-drawer-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

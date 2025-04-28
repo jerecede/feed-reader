@@ -1,0 +1,7 @@
+<div class="container">
+    <div class="subcontainer">
+        <app-card *ngFor="let item of dataServ.currentFavoriteItems()" [itemCard]="item">
+        </app-card>
+    </div>
+    <button [routerLink]="['']">back</button>
+</div>

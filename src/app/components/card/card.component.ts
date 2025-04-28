@@ -23,6 +23,10 @@ export class CardComponent {
     };
   }
 
+  get date() {
+    return new Date(this.itemCard.timestamp).toLocaleDateString() + ' - ' + new Date(this.itemCard.timestamp).toTimeString().split(' ')[0].slice(0,5);
+  }
+
   //sto sbagliando logica
   toggleFavorite(){
     this.itemCard.isFavorite = !this.itemCard.isFavorite;

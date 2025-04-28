@@ -40,12 +40,14 @@ export class CardComponent {
         text: 'Guarda questa notizia interessante!',
         url: this.itemCard.link
       }).then(() => {
-        console.log('Condiviso con successo!');
+        console.log('share with success!');
       }).catch((error) => {
-        console.error('Errore nella condivisione', error);
+        console.error('error', error);
       });
     } else {
-      console.log('La condivisione non è supportata su questo browser.');
+      navigator.clipboard.writeText(this.itemCard.link)
+        .then(() => console.log('link copied'))
+        .catch(err => console.log('errore', err));
     }
   }
 }
